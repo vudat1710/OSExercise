@@ -1,49 +1,42 @@
 public class Main {
-    static Bathroom bathroom = new Bathroom(2);
-    static int count = 0;
+    private static Bathroom b = new Bathroom();
 
-    public static void main(String[] args) {
-        bathroom.incomingUser();
-        bathroom.users.forEach((t) -> {
-            System.out.println(t);
-        });
+    public static void main(String[] args) throws InterruptedException {
+        String Line = b.incomingUser();
+        System.out.println(Line);
 
-        Thread[] male = new Thread[bathroom.users.size()];
-        Thread[] female = new Thread[bathroom.users.size()];
+        Thread[] men = new Thread[Line.length()];
+        Thread[] women = new Thread[Line.length()];
 
-
-        bathroom.users.forEach((t) -> {
-            if (t.startsWith("M")) {
-                male[count] = new MenThread();
-                male[count].start();
-                count++;
+        for (int i = 0; i < Line.length(); i++) {
+            if (Line.charAt(i) == 'M') {
+                men[i] = new MenThread(i);
+                men[i].start();
             }
-            if (t.startsWith("W")) {
-                female[count] = new WomenThread();
-                female[count].start();
-                count++;
-            }
-        });
-
-        for (int i = 0; i < bathroom.users.size(); i++) {
-            Character a = bathroom.users.get(i + 1).charAt(0);
-            Character b = bathroom.users.get(i).charAt(0);
-            if (!(a.equals(b))) {
-                if (b.equals("M")) {
-                    try {
-                        male[i].join();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (b.equals("W")) {
-                    try {
-                        female[i].join();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+            if (Line.charAt(i) == 'W') {
+                women[i] = new WomenThread(i);
+                women[i].start();
             }
         }
+
+//        for (int i = 1; i < Line.length(); i++) {
+//            if (Line.charAt(i) != Line.charAt(i - 1)) {
+//                if (Line.charAt(i) == 'M') {
+//                    try {
+//                        men[i].join();
+//                    } catch (InterruptedException ex) {
+//                        System.out.println("Error");
+//                    }
+//
+//                } else {
+//                    try {
+//                        women[i].join();
+//                    } catch (InterruptedException ex) {
+//                        System.out.println("Error");
+//                    }
+//                }
+//            }
+//        }
     }
 }
+
